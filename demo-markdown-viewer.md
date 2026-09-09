@@ -12,16 +12,16 @@
 
 ## 💻 Code with Syntax Highlighting
 ```javascript
-  function renderMarkdown() {
-    const markdown = markdownEditor.value;
-    const html = marked.parse(markdown);
-    const sanitizedHtml = DOMPurify.sanitize(html);
-    markdownPreview.innerHTML = sanitizedHtml;
-    
-    // Syntax highlighting is handled automatically
-    // during the parsing phase by the marked renderer.
-    // Themes are applied instantly via CSS variables.
-  }
+function renderMarkdown() {
+  const markdown = markdownEditor.value;
+  const html = marked.parse(markdown);
+  const sanitizedHtml = DOMPurify.sanitize(html);
+  markdownPreview.innerHTML = sanitizedHtml;
+  
+  // Syntax highlighting is handled automatically
+  // during the parsing phase by the marked renderer.
+  // Themes are applied instantly via CSS variables.
+}
 ```
 
 ## 🧮 Mathematical Expressions
@@ -110,6 +110,8 @@ sequenceDiagram
 
 Text can be formatted in various ways for ~~strikethrough~~, **bold**, *italic*, or ***bold italic***.
 
+Markdown `tag` focus
+
 For highlighting important information, use <mark>highlighted text</mark> or add <u>underlines</u> where appropriate.
 
 ### Superscript and Subscript
@@ -142,7 +144,10 @@ Create bullet points:
 * Item 1
 * Item 2
   * Nested item
+* Item 3
+  * Nested item
     * Nested further
+    * Nested further 2
 
 ### **Links and Images**
 
@@ -154,7 +159,10 @@ Embed an image:
 ### **Blockquotes**
 
 Quote someone famous:
+> "The best way to predict the future is to invent it." - Alan Kay 
+
 > "The best way to predict the future is to invent it." - Alan Kay
+>> "The best way to predict the future is to invent it." - Alan Kay
 
 ---
 

@@ -8,16 +8,32 @@
 :root {
   /* Variables */
   --color--bg-default: hsl(0, 0%, 100%);
-  --color--bg-elevated: hsl(0, 0%, 96%);
+  --color--bg-elevated: hsl(0, 0%, 98%);
   --color--fg-default: hsl(0, 0%, 10%);
   --color--fg-secondary: hsl(0, 0%, 30%);
-  --color--fg-sebtle: hsl(0, 0%, 30%);
-  --color--primary: hsl(37, 100%, 50%);
-  --color--primary--alpha: hsla(37, 100%, 50%, .2);
+  --color--fg-subtle: hsl(0, 0%, 70%);
+  --color--primary: hsl(300, 20%, 35%);
+  --color--primary--alpha: hsla(300, 50%, 25%, .2);
 
+  --border-radius--small: .25rem;
   --border-radius--default: 1rem;
+  --box-shadow: 0rem .2rem .5rem hsla(0, 0%, 0%, .1);
+
+  --horizontal-padding: if(
+    /* PHONE */ media(width < 767px):  1rem;
+    /* TABLET */media(width < 1280px): 2rem;
+    /* LAPTOP */media(width < 1920px): 20svw;
+    /* DESKTOP */ else:                26svw;
+  );
   font-family: 'inter-var', sans-serif;
-  font-size: 16px;
+  font-size: 14px;
+}
+
+button {
+  cursor: pointer;
+  font-size: 1rem;
+  padding: .25rem .5rem;
+  font-family: 'inter-var', sans-serif;
 }
 
 body {
@@ -33,10 +49,49 @@ body {
   background-color: var(--color--bg-default);
   color: var(--color--fg-default);
 }
+body.book {
+  --color--bg-default: hsl(50, 10%, 95%);
+  --color--bg-elevated: hsl(50, 10%, 93%);
+  --color--fg-default: hsl(0, 0%, 0%);
+  --color--fg-secondary: hsl(0, 0%, 20%);
+  --color--fg-subtle: hsl(0, 0%, 70%);
+  --color--primary: hsl(0,0%, 50%);
+  --color--primary--alpha: hsla(37, 100%, 50%, .2);
 
-main {
+  font-family: serif;
+  background-color: var(--color--bg-default);
+  color: var(--color--fg-default);
+  font-size: 16px;
+}
+body.book h1,
+body.book h2 {
+  text-decoration: none;
+  color: var(--color--fg-default);
+}
+body.book button {
+  font-family: serif;
+}
+
+body.dark {
+  --color--bg-default: hsl(0, 0%, 10%);
+  --color--bg-elevated: hsl(0, 0%, 16%);
+  --color--fg-default: hsl(0, 0%, 100%);
+  --color--fg-secondary: hsl(0, 0%, 60%);
+  --color--fg-subtle: hsl(0, 0%, 40%);
+  --color--primary: hsl(300, 20%, 65%);
+  --color--primary--alpha: hsla(300, 50%, 65%, .2);
+
+  background-color: var(--color--bg-default);
+  color: var(--color--fg-default);
+}
+body.dark h1,
+body.dark h2 {
+  /* text-decoration: none; */
+}
+
+main.main {
   position: relative;
-  display: flex;
+  /* display: flex; */
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
@@ -46,24 +101,41 @@ main {
   overflow-y: scroll;
   margin: 0;
   scroll-behavior: smooth;
-  padding: 0 1.5rem 1rem;
-  gap: 1rem;
+  padding: 0 var(--horizontal-padding) 3rem;
+  /* gap: 1rem; */
 
-  background-color: var(--color--bg-default);
-
-  &::-webkit-scrollbar {
+  /* &::-webkit-scrollbar {
     display: none;
-  }
+  } */
 
   &:focus-visible {
     outline: none;
   }
 }
 
+a {
+  color: var(--color--primary);
+  filter: brightness(1.3);
+}
+
+.markdown-body {
+  width: 100%;
+}
+
+.markdown-body.a4-page {
+  margin: 0;
+  width: 210mm;
+  min-height: 297mm;
+  padding: 20mm;
+
+  background: white;
+  box-sizing: border-box;
+}
+
 .drop-zone {
   background-color: var(--color--primary--alpha);
-  width: 67svw;
-  max-width: 640px;
+  width: 100%;
+  /* max-width: 640px; */
   margin: auto;
   padding: 6rem 5rem;
   border-radius: var(--border-radius--default);
@@ -78,12 +150,91 @@ main {
   display: none;
 }
 
+img {
+  width: 100%;
+  max-width: 720px;
+}
+
+.floating-menu {
+  --padding: .5rem;
+  --button-size: 2rem;
+  --special-border-radius: calc(var(--border-radius--small) + var(--padding));
+  position: fixed;
+  bottom: 1rem;
+  right: 2.25rem;
+  display: flex;
+  flex-direction: column-reverse;
+
+  background-color: var(--color--bg-default);
+  border-radius: var(--border-radius--small);
+  height: fit-content;
+  border: 1px solid var(--color--fg-subtle);
+  z-index: 400;
+  overflow: visible;
+}
+.floating-menu.closed {
+  height: var(--button-size);
+  overflow: hidden;
+}
+.floating-menu.hidden {
+  display: none;
+}
+.menu-body {
+  --padding: 1rem;
+  --button-size: 2.5rem;
+  display: flex;
+  flex-direction: column;
+
+  position: relative;
+  padding: var(--padding);
+  gap: var(--padding);
+  border-radius: var(--special-border-radius) var(--special-border-radius) 0 0;
+  border-bottom: 1px solid var(--color--fg-subtle);
+}
+.floating-menu button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: hsl(0, 0%, 80%);
+  color: var(--color--fg-secondary);
+  padding: .25rem;
+  border: none;
+  border-radius: var(--border-radius--small);
+  min-width: var(--button-size); width: var(--button-size); max-width: var(--button-size);
+  min-height: var(--button-size); height: var(--button-size); max-height: var(--button-size);
+}
+.floating-menu button.toggle-floating-menu {
+  min-width: 100%; width: 100%; max-width: 100%;
+  border-radius: 0;
+  padding: .25rem .5rem;
+  background-color: var(--color--bg-default);
+}
+.floating-menu button.toggle-floating-menu:hover {
+  background-color: var(--color--bg-elevated);
+}
+
+.themes-container {
+  display: flex;
+  justify-content: flex-end;
+  position: absolute;
+  bottom: var(--padding);
+  right: calc(var(--button-size) + calc(3 * var(--padding)) + 1px);
+  gap: var(--padding);
+}
+.themes-container.closed {
+  display: none;
+}
+
 h1, h2, h3, h4, h5, h6 {
   --font-size: 1rem;
   font-size: var(--font-size);
-  margin-top: calc( var(--font-size) / 1.5);
-  margin-bottom: calc( var(--font-size) / 2);
+  margin-top: calc(var(--font-size) / 1.5);
+  margin-bottom: calc(var(--font-size) / 2);
   display: block;
+  line-height: calc(var(--font-size) * 1.5);
+  text-underline-offset: calc(var(--font-size) / 3.5);
+  /* letter-spacing: calc(var(--font-size) / 18); */
 }
 
 h1 { --font-size: 2.25rem;}
@@ -99,23 +250,27 @@ h3::before,
 h4::before, 
 h5::before, 
 h6::before { 
-  content: '⬤';
-  margin-right: calc(var(--font-size) / 4);
+  content: '';
+  display: inline;
+  margin-right: calc(var(--font-size) / 2);
   font-size: calc(var(--font-size) / 2);
   color: var(--color--primary);
+  width: calc(var(--font-size) / 7);
+  min-height: calc(var(--font-size) * 1);
+  background-color: var(--color--primary);
+  border-radius: 500px;
 } */
 
 h1 {
-  text-decoration: underline;
+  /* color: var(--color--primary); */
+  /* text-decoration: underline;
   text-decoration-color: var(--color--primary);
-  text-underline-offset: 1rem;
-  text-decoration-thickness: .25rem;
+  text-decoration-thickness: .2rem; */
 }
 h2 {
-  text-decoration: underline;
+  /* text-decoration: underline;
   text-decoration-color: var(--color--primary);
-  text-underline-offset: .75rem;
-  text-decoration-thickness: .1rem;
+  text-decoration-thickness: .1rem; */
 }
 h4, h5, h6 {
   color: var(--color--fg-secondary);
@@ -130,12 +285,256 @@ blockquote {
   margin-block-end: 0;
   margin-inline-start: 0;
   margin-inline-end: 0;
-  margin-left: 1rem;
+  /* margin-left: 1rem; */
   unicode-bidi: isolate;
   background-color: var(--color--bg-elevated);
   padding: .5rem 1rem 0;
   border-left: .5rem solid var(--color--primary);
+  /* border-bottom: .2rem solid var(--color--primary); */
+  margin-bottom: 1rem;
+  border-radius: var(--border-radius--small);
+  box-shadow: var(--box-shadow);
+  width: fit-content;
 }
 blockquote p {
   margin-top: 0;
+  margin-bottom: .5rem;
+}
+
+table {
+  border-collapse: collapse;
+}
+table thead th {
+  border-bottom: 1px solid var(--color--primary);
+  padding: .5rem;
+  color: var(--color--fg-default);
+}
+table tbody td {
+  padding: .5rem;
+}
+table tbody tr:not(:last-child) td {
+  border-bottom: 1px solid var(--color--fg-subtle);
+}
+
+kbd {
+  background-color: var(--color--bg-elevated);
+  border-radius: var(--border-radius--small);
+  padding: .15rem .4rem;
+  border: .1rem solid var(--color--fg-subtle);
+}
+
+p, li {
+  line-height: 1.6rem;
+}
+
+/* p {
+  max-width: 720px;
+} */
+
+code {
+  background-color: var(--color--bg-elevated);
+  border-radius: var(--border-radius--small);
+  padding: .1rem .5rem .1rem .4rem;
+  border: .1rem solid var(--color--fg-subtle);
+}
+
+pre > code.hljs {
+  --padding: 1.25rem;
+  position: relative;
+  overflow: visible;
+  display: block;
+  width: fit-content;
+  padding: 4rem var(--padding) 1rem var(--padding);
+  border-radius: var(--border-radius--default);
+  background-color: hsl(0, 0%, 15%);
+  color: white;
+  border: none;
+  box-shadow: 0px 5px 10px hsla(0, 0%, 0%, .5);
+  font-size: 1.12rem;
+  line-height: 1.35rem;
+}
+
+pre > code::before {
+  position: absolute;
+  content: '? unknown';
+  padding: 0 var(--padding);
+  background-color: hsl(0, 0%, 30%);
+  border-radius: var(--border-radius--default) var(--border-radius--default) 0 0;
+  width: calc(100% - calc(2 * var(--padding)));
+  font-weight: 800;
+  letter-spacing: .1rem;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 3rem;
+}
+
+pre > code.language-plaintext::before,
+pre > code.language-text::before,
+pre > code.language-txt::before {
+  content: '¶ Text';
+}
+
+pre > code.language-html::before {
+  content: '<> HTML';
+  background-color: hsl(12, 73%, 51%);
+  color: white;
+}
+pre > code.language-css::before {
+  content: '<> CSS';
+  background-color: hsl(228, 73%, 51%);
+  color: white;
+}
+pre > code.language-javascript::before,
+pre > code.language-js::before {
+  content: '<> JavaScript';
+  background-color: hsl(53, 87%, 53%);
+  color: black;
+}
+pre > code.language-typescript::before,
+pre > code.language-ts::before {
+  content: '<> TypeScript';
+  background-color: hsl(211, 61%, 47%);
+  color: white;
+}
+pre > code.language-json::before {
+  content: '{ } JSON';
+}
+pre > code.language-xml:not(.language-html)::before {
+  content: '<> XML';
+  background-color: hsl(29, 100%, 47%);
+  color: white;
+}
+pre > code.language-markdown::before,
+pre > code.language-md::before {
+  content: '# Markdown';
+  background-color: white;
+  color: black;
+}
+pre > code.language-bash::before {
+  content: '>_ Bash';
+  background-color: black;
+  color: white;
+}
+pre > code.language-shell::before,
+pre > code.language-sh::before {
+  content: '>_ Shell';
+  background-color: black;
+  color: white;
+}
+pre > code.language-powershell::before,
+pre > code.language-ps1::before {
+  content: '>_ PowerShell';
+  background-color: hsl(215, 98%, 17%);
+  color: white;
+}
+pre > code.language-python::before,
+pre > code.language-py::before {
+  content: '<> Python';
+  background: linear-gradient(160deg, hsl(207, 49%, 40%) 0%, hsl(207, 49%, 40%) 50%, hsl(45, 92%, 60%) 50%, hsl(45, 92%, 60%) 100%);
+  color: white;
+}
+pre > code.language-java::before {
+  content: '<> Java';
+  background-color: white;
+  color: hsl(360, 77%, 53%);
+}
+pre > code.language-c::before {
+  content: '<> C';
+  background-color: hsl(209, 100%, 25%);
+  color: white;
+}
+pre > code.language-cpp::before,
+pre > code.language-c\+\+::before {
+  content: '<> C++';
+  background-color: hsl(203, 100%, 38%);
+  color: white;
+}
+pre > code.language-csharp::before,
+pre > code.language-cs::before,
+pre > code.language-c\#::before {
+  content: '<> C#';
+  background-color: hsl(294, 44%, 36%);
+  color: white;
+}
+pre > code.language-php::before {
+  content: '<> PHP';
+  background-color: hsl(236, 26%, 66%);
+  color: black;
+}
+pre > code.language-ruby::before {
+  content: '<> Ruby';
+  background-color: hsl(7, 99%, 32%);
+  color: white;
+}
+pre > code.language-go::before {
+  content: '<> GO';
+  background-color: white;
+  color: hsl(192, 100%, 41%);
+}
+pre > code.language-rust::before {
+  content: '<> Rust';
+  background-color: black;
+  color: hsl(26, 98%, 48%);
+}
+pre > code.language-swift::before {
+  content: '<> Swift';
+  background: linear-gradient(0deg, hsl(4, 100%, 58%) 0%, hsl(35, 95%, 62%) 100%);
+  color: white;
+}
+pre > code.language-kotlin::before {
+  content: '<> Kotlin';
+  background: linear-gradient(140deg, hsl(198, 100%, 42%) 0%, hsl(228, 68%, 63%) 50%, hsl(32, 95%, 51%) 50%, hsl(32, 95%, 51%) 70%, hsl(228, 68%, 63%) 70%, hsl(249, 66%, 66%) 100%);
+  color: white;
+}
+pre > code.language-sql::before {
+  content: '<> SQL';
+  background-color: white;
+  color: hsl(24, 75%, 48%);
+}
+pre > code.language-yaml::before,
+pre > code.language-yml::before {
+  content: '- YAML';
+  background-color: black;
+  color: hsl(358, 80%, 44%);
+}
+pre > code.language-toml::before {
+  content: '[ ] TOML';
+  background-color: white;
+  color: hsl(16, 65%, 36%);
+}
+pre > code.language-dockerfile::before {
+  content: '▣ Dockerfile';
+  background-color: white;
+  color: hsl(201, 93%, 34%);
+}
+pre > code.language-graphql::before {
+  content: '{ } GraphQL';
+  background-color: white;
+  color: hsl(320, 72%, 54%);
+}
+
+ul, ol {
+  margin-block-start: .5rem;
+}
+
+:is(dir, menu, ol, ul) ul,
+:is(dir, menu, ol, ul) ol {
+  margin-block-end: .5rem;
+}
+
+:is(dir, menu, ol, ul) ul ,
+:is(dir, menu, ol, ul) ol{
+  margin-bottom: .5rem;
+}
+
+ul > li,
+ol > li {
+  margin-bottom: .5rem;
+}
+
+li::marker {
+  color: var(--color--primary);
 }
