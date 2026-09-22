@@ -2,40 +2,30 @@ import { marked } from "https://esm.sh/marked";
 import DOMPurify from "https://esm.sh/dompurify";
 import hljs from 'https://esm.sh/highlight.js';
 
+initFileHandler();
+
 const MAIN = document.getElementById('main');
 
-MAIN.innerHTML = `
-  <div id="intro">
-    <h1>Welcome to Markdown Reader</h1>
-    <p>
-      The simple way to read your .md files.
-    </p>
-    <h2>Key features</h2>
-    <ul>
-      <li>No login required</li>
-      <li>Open local .md and .markdown files by picker or drag and drop</li>
-      <li>Export to PDF</li>
-      <li>No server upload of your markdown files</li>
-    </ul>
-  </div>
-  <section id="drop-zone" class="drop-zone">
-    <input
-      id="markdown-input"
-      type="file"
-      accept=".md,.markdown,text/markdown,text/plain"
-      hidden
-    >
+function initFileHandler() {
+  if (!('launchQueue' in window)) {
+    return;
+  }
 
-    <button id="open-file-button" type="button">
-      Ouvrir un fichier Markdown
-    </button>
+  window.launchQueue.setConsumer(async launchParams => {
+    const [fileHandle] = launchParams.files;
 
-    <p>ou déposez un fichier .md ici</p>
-  </section>
+    if (!fileHandle) {
+      return;
+    }
 
-  <article id="markdown-body" class="markdown-body" hidden></article>
-`;
+    const file = await fileHandle.getFile();
 
+    await openMarkdownFile(file);
+  });
+}
+
+const navigation = document.querySelector('#navigation');
+const introPage = document.querySelector('#introPage');
 const intro = document.querySelector('#intro');
 const markdownBody = document.querySelector('#markdown-body');
 const floatingMenu = document.querySelector('#floating-menu');
@@ -77,18 +67,22 @@ function setupTheme(theme) {
 
 toggleFloatingMenu.addEventListener('click', event => {
   floatingMenu.classList.toggle('closed', !floatingMenu.classList.contains('closed'));
+  themesContainer.classList.add('closed');
 });
 themesManager.addEventListener('click', event => {
   themesContainer.classList.toggle('closed', !themesContainer.classList.contains('closed'));
 });
 theme1Button.addEventListener('click', event => {
-  setupTheme('default')
+  setupTheme('default');
+  /* themesContainer.classList.add('closed'); */
 });
 theme2Button.addEventListener('click', event => {
-  setupTheme('dark')
+  setupTheme('dark');
+  /* themesContainer.classList.add('closed'); */
 });
 theme3Button.addEventListener('click', event => {
-  setupTheme('book')
+  setupTheme('book');
+  /* themesContainer.classList.add('closed'); */
 });
 
 loadNewMarkdown.addEventListener('click', event => {
@@ -146,6 +140,139 @@ async function openMarkdownFile(file) {
     hljs.highlightElement(codeBlock);
   });
 
+  const children = markdownBody.children;
+
+  let h1_count = 0;
+  let h2_count = 0;
+  let h3_count = 0;
+  let h4_count = 0;
+  let h5_count = 0;
+  let h6_count = 0;
+
+  const HIERARCHY = [];
+
+  for (let child of children) {
+    /* console.log(child.nodeName); */
+    if (child.nodeName == 'H1') {
+      h1_count ++;
+      const id = `h1_${h1_count}`;
+      child.setAttribute('id', id);
+      const object = {
+        name: child.innerHTML,
+        id: id,
+        children: [],
+      };
+      HIERARCHY.push(object);
+    }
+
+    if (child.nodeName == 'H2') {
+      h2_count ++;
+      const id = `h2_${h2_count}`;
+      child.setAttribute('id', id);
+      const object = {
+        name: child.innerHTML,
+        id: id,
+        children: [],
+      };
+      const lastH1 = HIERARCHY[HIERARCHY.length - 1];
+      lastH1.children.push(object);
+    }
+
+    if (child.nodeName == 'H3') {
+      h3_count ++;
+      const id = `h3_${h3_count}`;
+      child.setAttribute('id', id);
+      const object = {
+        name: child.innerHTML,
+        id: id,
+        children: [],
+      };
+      const lastH1 = HIERARCHY[HIERARCHY.length - 1];
+      const lastH2 = lastH1.children[lastH1.children.length - 1];
+      lastH2.children.push(object);
+    }
+
+    if (child.nodeName == 'H4') {
+      h4_count ++;
+      const id = `h4_${h4_count}`;
+      child.setAttribute('id', id);
+      const object = {
+        name: child.innerHTML,
+        id: id,
+        children: [],
+      };
+      const lastH1 = HIERARCHY[HIERARCHY.length - 1];
+      const lastH2 = lastH1.children[lastH1.children.length - 1];
+      const lastH3 = lastH2.children[lastH2.children.length - 1];
+      lastH3.children.push(object);
+    }
+
+    if (child.nodeName == 'H5') {
+      h5_count ++;
+      const id = `h5_${h5_count}`;
+      child.setAttribute('id', id);
+      const object = {
+        name: child.innerHTML,
+        id: id,
+        children: [],
+      };
+      const lastH1 = HIERARCHY[HIERARCHY.length - 1];
+      const lastH2 = lastH1.children[lastH1.children.length - 1];
+      const lastH3 = lastH2.children[lastH2.children.length - 1];
+      const lastH4 = lastH3.children[lastH3.children.length - 1];
+      lastH4.children.push(object);
+    }
+
+    if (child.nodeName == 'H6') {
+      h6_count ++;
+      const id = `h6_${h6_count}`;
+      child.setAttribute('id', id);
+      const object = {
+        name: child.innerHTML,
+        id: id,
+        children: [],
+      };
+      const lastH1 = HIERARCHY[HIERARCHY.length - 1];
+      const lastH2 = lastH1.children[lastH1.children.length - 1];
+      const lastH3 = lastH2.children[lastH2.children.length - 1];
+      const lastH4 = lastH3.children[lastH3.children.length - 1];
+      const lastH5 = lastH4.children[lastH4.children.length - 1];
+      lastH5.children.push(object);
+    }
+  }
+
+  //console.table(HIERARCHY);
+
+  // Set hierarchy as nav
+  function getLinkObjectDom(object) {
+    return `
+      <li>
+        <a href="#${object.id}" class="${object.id[0]}${object.id[1]}">${object.name}</a>
+        ${object.children.length != 0 ? `<ul>${getLinkObjectChildrenDom(object)}</ul>` : ''}
+      </li>
+    `;
+  }
+
+  function getLinkObjectChildrenDom(object) {
+    let str = ``;
+    for (let child of object.children) {
+      str += getLinkObjectDom(child);
+    }
+    return str;
+  }
+
+  function getNavDom() {
+    let str = `<ul>`;
+    for (let h1 of HIERARCHY) {
+      str += getLinkObjectDom(h1);
+    }
+    str += `</ul>`;
+    return str;
+  }
+
+  navigation.classList.remove('hidden');
+  navigation.innerHTML = getNavDom();
+  introPage.hidden = true;
   intro.hidden = true;
   dropZone.hidden = true;
   markdownBody.hidden = false;

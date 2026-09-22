@@ -3,8 +3,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <title id="title">Alpha test</title>
-  <meta name="description" content="Recycle">
+  <title id="title">Markdown reader</title>
+  <meta name="description" content="Read your Markdown files">
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css"
@@ -15,19 +15,50 @@
 </head>
 
 <body id="body" class="dark">
-
-  <main id="main" class="main"></main>
+  <main id="main" class="main">
+    <nav id="navigation" class="hidden">
+      coucou
+    </nav>
+    <div id="introPage" class="intro-page">
+      <section id="intro">
+        <h1>Welcome to Markdown Reader</h1>
+        <p>
+          The simplest way to read your .md files.
+        </p>
+        <h2>Key features</h2>
+        <ul>
+          <li>No login required</li>
+          <li>Open local .md and .markdown files by picker or drag and drop</li>
+          <li>Export to PDF</li>
+          <li>No server upload of your markdown files</li>
+        </ul>
+      </section>
+      <section id="drop-zone" class="drop-zone">
+        <input
+          id="markdown-input"
+          type="file"
+          accept=".md,.markdown,text/markdown,text/plain"
+          hidden
+        >
+        <button id="open-file-button" type="button">
+          Ouvrir un fichier Markdown
+        </button>
+        <p>ou déposez un fichier .md ici</p>
+      </section>
+    </div>
+    <article id="markdown-body" class="markdown-body" hidden></article>
+  </main>
 
   <div id="floating-menu" class="floating-menu closed hidden">
     <button id="toggle-floating-menu" class="toggle-floating-menu">menu</button>
     <div id="menu-body" class="menu-body">
       <button id="load-new-markdown" class="load-new-markdown">load</button>
-      <button id="export-to-pdf" class="export-to-pdf">export</button>
+      <button id="export-to-pdf" class="export-to-pdf">export to PDF</button>
       <button id="themes-manager" class="themes-manager">theme</button>
       <div id="themes-container" class="themes-container closed">
-        <button id="theme-1" class="theme-1">1</button>
-        <button id="theme-2" class="theme-2">2</button>
-        <button id="theme-3" class="theme-3">3</button>
+        <button id="theme-1" class="theme-button theme-1">1</button>
+        <button id="theme-2" class="theme-button theme-2">2</button>
+        <button id="theme-3" class="theme-button theme-3">3</button>
       </div>
     </div>
   </div>
