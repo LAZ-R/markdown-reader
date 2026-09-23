@@ -5,7 +5,7 @@ pre > code.hljs {
   position: relative;
   overflow: visible;
   display: block;
-  width: fit-content;
+  width: 100%;
   padding: 4rem var(--padding) 1rem var(--padding);
   border-radius: var(--border-radius--default);
   background-color: hsl(0, 0%, 15%);
