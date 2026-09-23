@@ -1,5 +1,6 @@
 # markdown-reader
 
+v0.2.4 - ajout service worker et icones
 v0.2.3 - update css
 v0.2.2 - fix menu
 v0.2.1 - ajout navbar
